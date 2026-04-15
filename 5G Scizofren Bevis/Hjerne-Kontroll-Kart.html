@@ -1,0 +1,274 @@
+<html>
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Støy-Analyse // Nevral Kartlegging</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
+    <style>
+        :root {
+            --bg-deep: #020617;
+            --noise-cyan: #22d3ee;
+            --brain-pink: #f472b6;
+            --mast-signal: #ef4444;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: #e2e8f0;
+            overflow: hidden;
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            touch-action: none;
+        }
+
+        .perspective-container {
+            perspective: 1200px;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+        }
+
+        .stage-3d {
+            position: relative;
+            width: 95%;
+            max-width: 500px;
+            height: 80vh;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+        }
+
+        .glass-panel {
+            background: rgba(2, 6, 23, 0.85);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            border-radius: 1.5rem;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Tankekart Støy-animasjon */
+        .noise-mesh {
+            stroke-dasharray: 4;
+            animation: flow 10s linear infinite;
+        }
+
+        @keyframes flow {
+            from { stroke-dashoffset: 100; }
+            to { stroke-dashoffset: 0; }
+        }
+
+        .node-pulse {
+            animation: pulse-node 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-node {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+
+        .shader-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(34, 211, 238, 0.05), transparent);
+            pointer-events: none;
+            border-radius: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header: Teknologi mot Hjerne -->
+    <nav class="fixed top-0 left-0 right-0 h-16 flex items-center justify-between px-6 z-50 bg-slate-950/80 border-b border-cyan-500/20 backdrop-blur-xl">
+        <div class="flex items-center gap-3">
+            <div class="p-2 bg-cyan-600/20 border border-cyan-500/50 rounded-lg">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2"><path d="M21 12V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7"/><path d="M16 19h6"/><path d="M19 16v6"/><circle cx="9" cy="12" r="3"/></svg>
+            </div>
+            <div>
+                <h1 class="text-xs font-bold tracking-[0.2em] text-cyan-400 uppercase">Teknologi Panel // Støy-Analyse</h1>
+                <div class="flex items-center gap-2">
+                    <span class="text-[9px] text-slate-500">MOBIL_NETT_VS_HJERNE_v5</span>
+                </div>
+            </div>
+        </div>
+        <div id="status-indicator" class="flex items-center gap-2">
+            <span class="text-[8px] font-bold text-cyan-500 uppercase">Analyserer Støy</span>
+            <div class="w-2 h-2 bg-cyan-500 rounded-full node-pulse"></div>
+        </div>
+    </nav>
+
+    <div class="perspective-container">
+        <div id="stage" class="stage-3d">
+            
+            <!-- Tankekart Panel -->
+            <div class="absolute inset-0 glass-panel p-6 flex flex-col overflow-hidden">
+                <div class="shader-overlay"></div>
+                
+                <div class="flex justify-between items-start mb-4 z-10">
+                    <div>
+                        <h2 class="text-xs font-black text-white mb-1 uppercase">Nevralt Støy-Kart</h2>
+                        <div class="flex gap-2">
+                            <span class="text-[8px] bg-cyan-500/20 text-cyan-400 px-1.5 py-0.5 rounded border border-cyan-500/30">MOBILE_RF: AKTIV</span>
+                            <span class="text-[8px] bg-pink-500/20 text-pink-400 px-1.5 py-0.5 rounded border border-pink-500/30">BRAIN_WAVE: SYNC</span>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-[10px] font-mono text-cyan-400">INTERFERENS</div>
+                        <div id="noise-val" class="text-[14px] font-bold text-white">0.00%</div>
+                    </div>
+                </div>
+
+                <!-- SVG Tankekart / Noise Visualizer -->
+                <div class="flex-1 relative bg-slate-900/40 rounded-xl border border-white/5 overflow-hidden">
+                    <svg id="noise-svg" width="100%" height="100%" viewBox="0 0 400 400" class="absolute inset-0">
+                        <!-- Dynamisk generert støy-kart her -->
+                        <g id="map-connections" stroke="rgba(34, 211, 238, 0.2)" stroke-width="1"></g>
+                        <g id="map-nodes"></g>
+                    </svg>
+                </div>
+
+                <!-- Kontrollpanel -->
+                <div class="mt-4 pt-4 border-t border-white/10 grid grid-cols-2 gap-2 z-10">
+                    <button onclick="regenerateMap()" class="bg-cyan-600/20 border border-cyan-500/30 p-3 rounded-xl flex items-center justify-center gap-2 hover:bg-cyan-600/40 transition-all">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>
+                        <span class="text-[9px] text-cyan-300 uppercase">Oppdater Kart</span>
+                    </button>
+                    <button class="bg-pink-600/20 border border-pink-500/30 p-3 rounded-xl flex items-center justify-center gap-2">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z"/><path d="M12 7v5l3 3"/></svg>
+                        <span class="text-[9px] text-pink-300 uppercase">Nevral Analyse</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 3D Signal Mast Overlay -->
+            <div class="absolute -right-16 top-1/4 h-48 w-8 flex flex-col items-center" style="transform: translateZ(80px) rotateY(-30deg);">
+                <div class="w-1.5 h-full bg-slate-800 relative">
+                    <div class="absolute top-0 -left-4 w-10 h-10 border border-red-500/40 rounded-full node-pulse"></div>
+                    <div class="absolute top-10 -left-6 w-14 h-0.5 bg-cyan-400/30"></div>
+                </div>
+                <span class="text-[7px] text-red-400 font-bold mt-2 uppercase tracking-widest">RF_SOURCE</span>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let model;
+        const stage = document.getElementById('stage');
+        const mapNodes = document.getElementById('map-nodes');
+        const mapConnections = document.getElementById('map-connections');
+        const noiseVal = document.getElementById('noise-val');
+
+        // Perspektiv-variabler
+        let tx = 10, ty = -10;
+        let cx = 10, cy = -10;
+
+        // Initier TensorFlow for støy-prediksjon
+        async function initTensorFlow() {
+            model = tf.sequential();
+            model.add(tf.layers.dense({ units: 16, activation: 'relu', inputShape: [4] }));
+            model.add(tf.layers.dense({ units: 1, activation: 'sigmoid' }));
+            
+            generateMap();
+            animateLoop();
+        }
+
+        function generateMap() {
+            mapNodes.innerHTML = '';
+            mapConnections.innerHTML = '';
+            
+            const nodes = [];
+            const labels = ["HJERNE", "5G_MAST", "WIFI_RUTER", "NEVRAL_LINK", "STØY_FELT", "RESEPTOR"];
+            
+            // Lag noder
+            for (let i = 0; i < 6; i++) {
+                const x = 50 + Math.random() * 300;
+                const y = 50 + Math.random() * 300;
+                nodes.push({ x, y, label: labels[i] });
+
+                const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                circle.setAttribute("cx", x);
+                circle.setAttribute("cy", y);
+                circle.setAttribute("r", "6");
+                circle.setAttribute("fill", i === 0 ? "#f472b6" : "#22d3ee");
+                circle.setAttribute("class", "node-pulse");
+                mapNodes.appendChild(circle);
+
+                const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                text.setAttribute("x", x + 10);
+                text.setAttribute("y", y + 4);
+                text.setAttribute("fill", "white");
+                text.setAttribute("font-size", "8");
+                text.textContent = labels[i];
+                mapNodes.appendChild(text);
+            }
+
+            // Koble noder (Tankekart)
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    if (Math.random() > 0.4) {
+                        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                        line.setAttribute("x1", nodes[i].x);
+                        line.setAttribute("y1", nodes[i].y);
+                        line.setAttribute("x2", nodes[j].x);
+                        line.setAttribute("y2", nodes[j].y);
+                        line.setAttribute("stroke", "rgba(34, 211, 238, 0.2)");
+                        line.setAttribute("class", "noise-mesh");
+                        mapConnections.appendChild(line);
+                    }
+                }
+            }
+        }
+
+        function regenerateMap() {
+            generateMap();
+        }
+
+        async function updateNoiseAnalysis() {
+            if (!model) return;
+            const input = tf.tensor2d([[Math.random(), Math.random(), Math.random(), Math.random()]]);
+            const output = model.predict(input);
+            const data = await output.data();
+            
+            noiseVal.innerText = (data[0] * 100).toFixed(2) + "%";
+            
+            // Oppdater farger på linjer basert på "støy"
+            const lines = mapConnections.querySelectorAll('line');
+            lines.forEach(l => {
+                l.setAttribute("stroke-width", 0.5 + data[0] * 2);
+                l.setAttribute("stroke", `rgba(34, 211, 238, ${0.1 + data[0] * 0.4})`);
+            });
+
+            tf.dispose([input, output]);
+        }
+
+        function handleMove(e) {
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            const x = (clientX / window.innerWidth - 0.5) * 40;
+            const y = (clientY / window.innerHeight - 0.5) * -40;
+            tx = 10 + y;
+            ty = -10 + x;
+        }
+
+        function animateLoop() {
+            cx += (tx - cx) * 0.1;
+            cy += (ty - cy) * 0.1;
+            stage.style.transform = `rotateX(${cx}deg) rotateY(${cy}deg)`;
+            
+            if (Math.random() > 0.95) updateNoiseAnalysis();
+            
+            requestAnimationFrame(animateLoop);
+        }
+
+        window.onload = () => {
+            initTensorFlow();
+            window.addEventListener('mousemove', handleMove);
+            window.addEventListener('touchmove', handleMove);
+        };
+    </script>
+</body>
+</html>
