@@ -10,6 +10,7 @@ er du stalket av millorg gruppen
 og de taktiske avsløringene 
 gjelder psykisk tortur og 
 psykisk angrep
+helt til du dør og forsvinner
 
 
 ---------------
