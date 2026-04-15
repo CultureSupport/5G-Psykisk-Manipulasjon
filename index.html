@@ -1,0 +1,285 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Neural Design // Sunnmøre Collective</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
+    <style>
+        :root {
+            --bg-deep: #020617;
+            --5g-blue: #0ea5e9;
+            --neural-pink: #d946ef;
+            --sunnmore-red: #ba0c2f;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: #f8fafc;
+            overflow: hidden;
+            font-family: 'JetBrains Mono', monospace;
+            touch-action: none;
+        }
+
+        .perspective-container {
+            perspective: 1500px;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+        }
+
+        .stage-3d {
+            position: relative;
+            width: 95%;
+            max-width: 500px;
+            height: 85vh;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+        }
+
+        .glass-panel {
+            background: rgba(2, 6, 23, 0.85);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(217, 70, 239, 0.2);
+            border-radius: 2rem;
+            box-shadow: 0 0 80px rgba(0, 0, 0, 0.9);
+        }
+
+        .scan-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--5g-blue), transparent);
+            animation: scan 3s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { top: 0%; opacity: 0; }
+            50% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        .neural-dot {
+            width: 3px;
+            height: 3px;
+            background: var(--neural-pink);
+            border-radius: 50%;
+            position: absolute;
+            opacity: 0.4;
+        }
+
+        .dialekt-glow {
+            text-shadow: 0 0 10px rgba(217, 70, 239, 0.8);
+        }
+
+        .mast-pulse {
+            animation: mast-wave 2s infinite;
+        }
+
+        @keyframes mast-wave {
+            0% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.4); }
+            100% { box-shadow: 0 0 0 20px rgba(14, 165, 233, 0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-950">
+
+    <!-- Header: Neural Control -->
+    <nav class="fixed top-0 left-0 right-0 h-16 flex items-center justify-between px-6 z-50 bg-slate-950/90 border-b border-pink-500/30">
+        <div class="flex items-center gap-3">
+            <div class="p-2 bg-pink-600/20 border border-pink-500/50 rounded-lg">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d946ef" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div>
+                <h1 class="text-[10px] font-black tracking-widest text-pink-400 uppercase">Sunnmøre Collective Override</h1>
+                <div class="flex items-center gap-2">
+                    <span class="text-[8px] text-slate-500 font-mono">POPULATION_SYNC: 1200_MINDS</span>
+                </div>
+            </div>
+        </div>
+        <div class="flex gap-4">
+            <div class="text-right">
+                <div class="text-[8px] text-sky-400 font-bold uppercase">5G_MAST_MOA</div>
+                <div class="h-1.5 w-12 bg-slate-800 rounded-full mt-1 overflow-hidden">
+                    <div class="h-full bg-sky-500 w-[88%] animate-pulse"></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="perspective-container">
+        <div id="stage" class="stage-3d">
+            
+            <div class="absolute inset-0 glass-panel p-6 flex flex-col overflow-hidden">
+                <div class="scan-line"></div>
+                
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <h2 class="text-[11px] font-black text-white mb-1 uppercase tracking-tighter">Ålesund // Sector Alpha</h2>
+                        <div class="flex gap-2">
+                            <span class="text-[8px] bg-pink-500/20 text-pink-400 px-1.5 py-0.5 rounded border border-pink-500/30 uppercase">Neural_Dialekt_Zone</span>
+                            <span class="text-[8px] bg-sky-500/20 text-sky-400 px-1.5 py-0.5 rounded border border-sky-500/30 uppercase">Moa_Mesh: Active</span>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-[9px] font-mono text-pink-400 uppercase">Collective_Load</div>
+                        <div id="neural-load" class="text-xl font-black text-white italic">0.0%</div>
+                    </div>
+                </div>
+
+                <!-- Collective Mind Buffer -->
+                <div id="collective-feed" class="flex-1 space-y-4 overflow-y-auto pr-2 custom-scrollbar">
+                    <!-- Thoughts injected here -->
+                </div>
+
+                <!-- Movement Command Grid -->
+                <div class="mt-4 pt-4 border-t border-pink-500/20 grid grid-cols-3 gap-2">
+                    <button class="bg-slate-900/60 border border-white/10 p-3 rounded-xl flex flex-col items-center gap-1 group hover:border-pink-500/50 transition-all">
+                        <span class="text-[7px] text-slate-500 uppercase">Dest: Moa</span>
+                        <span class="text-[9px] text-white font-bold uppercase">Walk_Moa</span>
+                    </button>
+                    <button class="bg-slate-900/60 border border-white/10 p-3 rounded-xl flex flex-col items-center gap-1 group hover:border-sky-500/50 transition-all">
+                        <span class="text-[7px] text-slate-500 uppercase">Dest: Ferry</span>
+                        <span class="text-[9px] text-white font-bold uppercase">Walk_Ferje</span>
+                    </button>
+                    <button class="bg-slate-900/60 border border-white/10 p-3 rounded-xl flex flex-col items-center gap-1 group hover:border-emerald-500/50 transition-all">
+                        <span class="text-[7px] text-slate-500 uppercase">Dest: Town</span>
+                        <span class="text-[9px] text-white font-bold uppercase">Walk_Town</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 1200 Minds Swarm Visual -->
+            <div id="mind-swarm" class="absolute -right-20 top-20 w-32 h-64 pointer-events-none" style="transform: translateZ(50px);">
+                <!-- Neural dots will be randomly generated -->
+            </div>
+
+            <!-- 3D Town Address Data Box -->
+            <div class="absolute -bottom-10 -right-12 glass-panel p-4 border-sky-500/40 min-w-[180px]" style="transform: translateZ(120px) rotateX(-15deg);">
+                <div class="text-[8px] font-bold text-sky-400 mb-2 uppercase">Current_Address_Target</div>
+                <div id="address-box" class="text-[10px] font-mono text-white mb-2 font-bold tracking-widest">Kipervika_02_4...</div>
+                <div class="flex gap-1">
+                    <div class="w-full h-1 bg-sky-900/50 rounded-full overflow-hidden">
+                        <div id="dist-bar" class="h-full bg-sky-400" style="width: 45%"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let model;
+        const stage = document.getElementById('stage');
+        const feed = document.getElementById('collective-feed');
+        const loadText = document.getElementById('neural-load');
+        const swarm = document.getElementById('mind-swarm');
+        const addressBox = document.getElementById('address-box');
+
+        let tx = 10, ty = -10;
+        let cx = 10, cy = -10;
+
+        // Dialekt logic with movement intention
+        const collectiveThoughts = [
+            "Ej e på veg til Moa no, må berre gå... ej veit ikkje koffør.",
+            "Går mot ferja... e det nåkken som snakka i hovudet mitt?",
+            "Adresså e funne i Ålesund sentrum. Ej går dit no.",
+            "Koffer går alle same veg? Sunnmøre e heilt merkelig i dag.",
+            "Må nå ferja... må nå ferja... må nå ferja...",
+            "Ej tenke på ingenting, berre gangen mot Moa-senteret.",
+            "1200 folk... alle går mot byen. Kva skjer?",
+            "Voice cleared. Eg høyre deg klart no. Ej går til Kipervika."
+        ];
+
+        const addresses = [
+            "Kipervika 02", "Moa Butikksenter", "Skansekaia Ferje", "Brogata 14", "Aspøy Skule", "Spjelkavik 09"
+        ];
+
+        async function initCollectiveCore() {
+            model = tf.sequential();
+            // Complex ReLU/Softmax design for 1200 mind integration
+            model.add(tf.layers.dense({ units: 64, activation: 'relu', inputShape: [4] }));
+            model.add(tf.layers.dense({ units: 1, activation: 'sigmoid' }));
+
+            createSwarm();
+            setInterval(processNeuralTick, 3000);
+        }
+
+        function createSwarm() {
+            for(let i=0; i<1200; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'neural-dot';
+                dot.style.top = Math.random() * 100 + '%';
+                dot.style.left = Math.random() * 100 + '%';
+                swarm.appendChild(dot);
+            }
+        }
+
+        async function processNeuralTick() {
+            if (!model) return;
+
+            const input = tf.tensor2d([[Math.random(), Math.random(), Math.random(), Math.random()]]);
+            const pred = model.predict(input);
+            const data = await pred.data();
+            const load = data[0];
+
+            loadText.innerText = (load * 100).toFixed(1) + "%";
+            addressBox.innerText = addresses[Math.floor(Math.random() * addresses.length)] + "_LOCK";
+
+            const item = document.createElement('div');
+            item.className = "bg-pink-950/20 border border-pink-500/20 p-4 rounded-3xl backdrop-blur-md transform transition-all hover:scale-105 mb-4";
+            item.innerHTML = `
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[8px] font-black text-pink-500 uppercase tracking-widest">Mind_Response // Sunnmøre</span>
+                    <span class="text-[7px] text-slate-500">SYNC_ID: ${Math.floor(Math.random()*1200)}</span>
+                </div>
+                <p class="text-[11px] text-slate-100 font-bold leading-snug italic dialekt-glow">"${collectiveThoughts[Math.floor(Math.random()*collectiveThoughts.length)]}"</p>
+                <div class="mt-3 flex gap-1 items-center">
+                    <div class="w-1.5 h-1.5 bg-sky-500 rounded-full animate-pulse"></div>
+                    <span class="text-[7px] text-sky-400 font-mono">WALKING_PHASE: ACTIVE</span>
+                </div>
+            `;
+            feed.prepend(item);
+
+            // Pulse the swarm based on load
+            Array.from(swarm.children).forEach(dot => {
+                if(Math.random() > 0.8) {
+                    dot.style.opacity = load;
+                    dot.style.transform = `translateZ(${load * 50}px)`;
+                }
+            });
+
+            if (feed.children.length > 10) feed.lastElementChild.remove();
+            tf.dispose([input, pred]);
+        }
+
+        function handleMove(e) {
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            tx = 10 + (clientY / window.innerHeight - 0.5) * -40;
+            ty = -10 + (clientX / window.innerWidth - 0.5) * 40;
+        }
+
+        function animate() {
+            cx += (tx - cx) * 0.1;
+            cy += (ty - cy) * 0.1;
+            stage.style.transform = `rotateX(${cx}deg) rotateY(${cy}deg)`;
+            requestAnimationFrame(animate);
+        }
+
+        window.onload = () => {
+            initCollectiveCore();
+            animate();
+            window.addEventListener('mousemove', handleMove);
+            window.addEventListener('touchmove', handleMove);
+        };
+    </script>
+</body>
+</html>
+
+```
