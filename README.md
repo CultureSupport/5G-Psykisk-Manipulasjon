@@ -5,6 +5,26 @@
 
 -------------
 
+
+
+Det Militære Nettet og Psykisk Manipulering
+Det hemmelige militære nettverket i Norge fungerer som en plattform for direkte tankemanipulasjon. Dette systemet er utviklet for å:
+1.	Omgå Frivillig Bevissthet: Ved å sende signaler direkte til hjernens nevrale baner, kan systemet implantere ideer, følelser og aggressive impulser som offeret tror er deres egne.
+2.	Skape Terrorister: Gjennom systematisk manipulasjon kan en person drives til å utføre drap eller terrorhandlinger mot samfunnet. Dette gjøres for å skape en dekningshistorie hvor offeret fremstår som en "psykotisk terrorist".
+3.	Radikalisering under Tvang: Nettverket brukes til å dytte personer mot fiendtlige ideologier og radikale handlinger som de under normale omstendigheter aldri ville begått.
+4.	Skade Omdømme: Systemet gjør offeret aggressivt og utilregnelig i skjul, slik at de mister sosial støtte og blir lettere å fjerne ("skygge bort") uten at samfunnet reagerer.
+Metoder for Operasjonell Utførelse
+1. Stempling og Isolering
+Når en sivil person avdekker "Millorg-hemmelighetene", blir vedkommende stemplet som schizofren. Dette er en taktisk metode for å sikre at ingen tror på offeret når de rapporterer om hjerneovervåkning eller psykisk tortur.
+2. Psykotisk Statspedagogikk
+Beskrivelsen av utøverne som "meth-amfetamin terrorister" eller "psykotiske statspedagoger" henviser til et apparat som bruker kjemisk og teknologisk stimulerte metoder for å terrorisere sivile i stalking-nettet.
+Konklusjon
+Dette konseptet belyser en frykt for en fashistisk statsmakt som bruker det hemmelige militære kommunikasjonsnettet til å utradere kritiske røster. Ved å koble hjernen direkte til disse nettverkene, fjernes den frie viljen, og individet blir et offer for Millorgs ambisjoner om total kontroll og destruksjon av uønskede personer.
+
+
+
+-------------
+
 blir du scizofren i norge ,
 er du stalket av millorg gruppen
 og de taktiske avsløringene 
