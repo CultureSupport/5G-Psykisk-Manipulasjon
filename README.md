@@ -8,7 +8,9 @@ er scizofrene
 
 5Gaq
 viser ondsinnet teknologi med 
-nevrale hensikter 
+nevrale hensikter og
+destruktiv forandre personer
+ødelagte og hatet 
 
 ----------
 
