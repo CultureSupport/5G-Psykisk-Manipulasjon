@@ -18,7 +18,8 @@ helt til du dør og forsvinner
 
 
 - Stats hemmelig stemplet drap
- program på sivile 
+ program på sivile som har funnet
+millorg hemmelighetene
 
 
 Hjerne Overvåkning Program Ålesund der 5G nettet blir brukt til ta over hjerne tankene til personer som tror dem
