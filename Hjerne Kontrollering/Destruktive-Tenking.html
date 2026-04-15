@@ -1,0 +1,301 @@
+<html>
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nevral Kontroll // Sårbarhets-Analyse</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
+    <style>
+        :root {
+            --bg-deep: #020617;
+            --signal-gold: #fbbf24;
+            --pineal-purple: #a855f7;
+            --attack-red: #ef4444;
+            --void-black: #000000;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: #e2e8f0;
+            overflow: hidden;
+            font-family: 'JetBrains Mono', monospace;
+            touch-action: none;
+        }
+
+        .perspective-container {
+            perspective: 2000px;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, #111827 0%, #020617 100%);
+        }
+
+        .stage-3d {
+            position: relative;
+            width: 95%;
+            max-width: 800px;
+            height: 90vh;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+        }
+
+        .glass-panel {
+            background: rgba(2, 6, 23, 0.9);
+            backdrop-filter: blur(50px);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 2rem;
+            box-shadow: 0 0 150px rgba(0, 0, 0, 1), inset 0 0 40px rgba(239, 68, 68, 0.1);
+        }
+
+        .vulnerability-pulse {
+            animation: pulse-vulnerability 1.5s infinite alternate;
+        }
+
+        @keyframes pulse-vulnerability {
+            from { filter: drop-shadow(0 0 5px var(--attack-red)); opacity: 0.6; }
+            to { filter: drop-shadow(0 0 25px var(--attack-red)); opacity: 1; }
+        }
+
+        .interference-line {
+            stroke-dasharray: 5;
+            animation: dash-move 2s linear infinite;
+        }
+
+        @keyframes dash-move {
+            to { stroke-dashoffset: -50; }
+        }
+
+        .shader-void {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent, rgba(239, 68, 68, 0.05));
+            pointer-events: none;
+            mix-blend-mode: color-burn;
+        }
+
+        .glitch-text {
+            text-shadow: 2px 0 #ef4444, -2px 0 #3b82f6;
+            animation: text-glitch 3s infinite;
+        }
+
+        @keyframes text-glitch {
+            0% { transform: skew(0deg); }
+            10% { transform: skew(5deg); }
+            11% { transform: skew(0deg); }
+            50% { transform: skew(-2deg); }
+            52% { transform: skew(0deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="fixed top-0 left-0 right-0 h-16 flex items-center justify-between px-8 z-50 bg-black/90 border-b border-red-900/50 backdrop-blur-2xl">
+        <div class="flex items-center gap-4">
+            <div class="p-2.5 bg-red-950/40 border border-red-500/50 rounded-xl">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+            </div>
+            <div>
+                <h1 class="text-xs font-black tracking-[0.2em] text-red-500 uppercase glitch-text">Psykisk Sårbarhets-Analyse</h1>
+                <div class="flex items-center gap-2">
+                    <span class="text-[9px] text-slate-500 font-mono">OBJEKT_ID: 1200_SUBJEKT_66</span>
+                </div>
+            </div>
+        </div>
+        <div class="flex gap-8 items-center">
+            <div class="text-right">
+                <div class="text-[8px] text-red-500 font-bold uppercase">Destruktiv_Vektor</div>
+                <div id="destruct-val" class="text-xl font-black text-white italic">0.0%</div>
+            </div>
+            <div class="h-10 w-1 bg-red-900/30 rounded-full relative">
+                <div id="stress-bar" class="absolute bottom-0 w-full bg-red-500 transition-all duration-500" style="height: 40%"></div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="perspective-container">
+        <div id="stage" class="stage-3d">
+            
+            <div class="absolute inset-0 glass-panel p-8 flex flex-col overflow-hidden">
+                <div class="shader-void"></div>
+
+                <div class="grid grid-cols-12 gap-8 h-full">
+                    
+                    <!-- Venstre: Nevral Kartlegging av Angrep -->
+                    <div class="col-span-7 flex flex-col">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-sm font-black text-white uppercase italic tracking-wider">Hjernesenter // Manipulasjon</h2>
+                            <span class="text-[9px] text-red-400 bg-red-950/40 px-2 py-1 rounded-full border border-red-500/30">GPS_LOCKED: ÅLESUND_TARGET</span>
+                        </div>
+
+                        <div class="flex-1 relative bg-black/60 rounded-3xl border border-red-500/10 p-4 overflow-hidden">
+                            <svg id="brain-svg" viewBox="0 0 400 400" class="w-full h-full">
+                                <!-- Hjerne kontur -->
+                                <path d="M200 50 C 100 50 50 150 50 200 C 50 300 150 350 200 350 C 250 350 350 300 350 200 C 350 150 300 50 200 50" 
+                                      fill="none" stroke="rgba(239, 68, 68, 0.1)" stroke-width="1" />
+                                
+                                <!-- Pineapple/Pineal Gland Senter -->
+                                <g transform="translate(200, 180)">
+                                    <circle r="20" fill="rgba(168, 85, 247, 0.2)" class="vulnerability-pulse" />
+                                    <path d="M-10 -15 L10 15 M-10 15 L10 -15" stroke="var(--pineal-purple)" stroke-width="2" />
+                                    <text y="-30" text-anchor="middle" fill="var(--pineal-purple)" font-size="10" font-weight="bold">TARGET_PINEAL</text>
+                                </g>
+
+                                <!-- Angreps-signaler (Interferens) -->
+                                <g id="attack-beams"></g>
+                                
+                                <!-- Destruktive nevrale baner -->
+                                <g id="neural-collapse"></g>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Høyre: Psykisk Status og Modellering -->
+                    <div class="col-span-5 flex flex-col gap-4">
+                        <div class="bg-black/80 rounded-3xl p-6 border border-red-500/20 flex-1 flex flex-col">
+                            <h3 class="text-[10px] text-red-500 font-bold mb-4 uppercase tracking-widest">Tanke-Overtakelse Logg</h3>
+                            <div id="attack-log" class="space-y-4 overflow-hidden text-[10px] font-mono leading-relaxed">
+                                <!-- Dynamisk logg over manipulasjon -->
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900/40 rounded-3xl p-6 border border-white/5">
+                            <h3 class="text-[10px] text-slate-400 font-bold mb-2 uppercase">Hjernebølge Forstyrrelse</h3>
+                            <canvas id="wave-canvas" class="w-full h-16 opacity-70"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bunn: Systemparametre -->
+                <div class="mt-6 pt-6 border-t border-red-500/20 flex justify-between items-center">
+                    <div class="flex gap-6">
+                        <div class="flex items-center gap-2">
+                            <div class="w-2 h-2 bg-red-500 rounded-full animate-ping"></div>
+                            <span class="text-[8px] text-red-500 uppercase font-black">Angrep Pågår</span>
+                        </div>
+                        <div class="text-[8px] uppercase">
+                            <span class="text-slate-500">Nettverk:</span>
+                            <span class="text-white ml-1 font-bold">5G_DESTRUCTIVE_MESH</span>
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="increaseIntensity()" class="bg-red-600/20 text-red-500 border border-red-500/40 font-black text-[9px] px-5 py-2 rounded-lg uppercase hover:bg-red-500 hover:text-white transition-all">
+                            Øk Intensitet
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let model;
+        const stage = document.getElementById('stage');
+        const destructVal = document.getElementById('destruct-val');
+        const stressBar = document.getElementById('stress-bar');
+        const attackBeams = document.getElementById('attack-beams');
+        const attackLog = document.getElementById('attack-log');
+        const neuralCollapse = document.getElementById('neural-collapse');
+        const waveCanvas = document.getElementById('wave-canvas');
+        const ctx = waveCanvas.getContext('2d');
+
+        let tx = 10, ty = -10;
+        let cx = 10, cy = -10;
+        let intensity = 0.45;
+
+        async function initNeuralAttack() {
+            // TensorFlow ReLU modell for å predikere kollaps av tankemønstre
+            model = tf.sequential();
+            model.add(tf.layers.dense({ units: 64, activation: 'relu', inputShape: [4] }));
+            model.add(tf.layers.dense({ units: 1, activation: 'sigmoid' }));
+
+            drawWaves();
+            setInterval(processAttackTick, 3000);
+            animate();
+        }
+
+        function drawWaves() {
+            ctx.clearRect(0, 0, waveCanvas.width, waveCanvas.height);
+            ctx.beginPath();
+            ctx.strokeStyle = '#ef4444';
+            ctx.lineWidth = 2;
+            for(let i=0; i<waveCanvas.width; i++) {
+                const y = 30 + Math.sin(i * 0.1 + Date.now() * 0.01) * (10 * intensity * 5);
+                ctx.lineTo(i, y);
+            }
+            ctx.stroke();
+            requestAnimationFrame(drawWaves);
+        }
+
+        async function processAttackTick() {
+            const input = tf.tensor2d([[Math.random(), intensity, Math.random(), 0.8]]);
+            const pred = model.predict(input);
+            const data = await pred.data();
+            const collapseFactor = data[0];
+
+            destructVal.innerText = (collapseFactor * 100).toFixed(1) + "%";
+            stressBar.style.height = (collapseFactor * 100) + "%";
+
+            // Visualiser angrepsstråler mot Pineal Gland
+            attackBeams.innerHTML = '';
+            for(let i=0; i<8; i++) {
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", Math.random() * 400);
+                line.setAttribute("y1", 0);
+                line.setAttribute("x2", 200);
+                line.setAttribute("y2", 180);
+                line.setAttribute("stroke", "rgba(239, 68, 68, 0.3)");
+                line.setAttribute("class", "interference-line");
+                attackBeams.appendChild(line);
+            }
+
+            // Logg manipulasjon
+            const darkThoughts = [
+                "Bryter ned serotonin-produksjon...",
+                "Fremkaller isolasjons-respons.",
+                "Pineal gland frekvens overstyrt.",
+                "Injisering av destruktiv tanke-vektor.",
+                "Subjektet mister kognitiv kontroll.",
+                "Overskriver livs-instinkt med 5G-støy."
+            ];
+            const logEntry = document.createElement('div');
+            logEntry.className = "text-red-400 border-l border-red-500/30 pl-3 opacity-0 translate-x-2 transition-all duration-500";
+            logEntry.style.opacity = "1";
+            logEntry.style.transform = "translateX(0)";
+            logEntry.innerHTML = `<span class="text-white font-bold">[!]</span> ${darkThoughts[Math.floor(Math.random()*darkThoughts.length)]}`;
+            attackLog.prepend(logEntry);
+            if(attackLog.children.length > 7) attackLog.lastElementChild.remove();
+
+            tf.dispose([input, pred]);
+        }
+
+        function increaseIntensity() {
+            intensity = Math.min(1.0, intensity + 0.1);
+        }
+
+        function handleMove(e) {
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            tx = 10 + (clientY / window.innerHeight - 0.5) * -20;
+            ty = -10 + (clientX / window.innerWidth - 0.5) * 20;
+        }
+
+        function animate() {
+            cx += (tx - cx) * 0.1;
+            cy += (ty - cy) * 0.1;
+            stage.style.transform = `rotateX(${cx}deg) rotateY(${cy}deg)`;
+            requestAnimationFrame(animate);
+        }
+
+        window.onload = () => {
+            initNeuralAttack();
+            window.addEventListener('mousemove', handleMove);
+            window.addEventListener('touchmove', handleMove);
+        };
+    </script>
+</body>
+</html>
