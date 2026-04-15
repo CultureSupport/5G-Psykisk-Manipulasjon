@@ -210,4 +210,56 @@ Dette dokumentet beskriver et påstått statlig overvåkningsprogram i Norge, st
 
 
 
-            
+-----------
+
+
+Brain-activity V2skull: Hemmelig Mk-Ultra-Cia og Millorg
+Denne dokumentasjonen utforsker teorier og observasjoner knyttet til skjult hjerneovervåkning, taktiske avsløringer og bruken av 5G-teknologi i forbindelse med psykisk krigføring i Norge.
+Prosjektoversikt: Hemmelig Mk-Ultra-Cia
+Dette dokumentet belyser konseptet rundt statsstempling av sivile og bruk av militær teknologi for å manipulere menneskelig bevissthet.
+Sentrale Hypoteser
+• Hjerneovervåkning i Ålesund: Teori om at 5G-nettet benyttes til å infiltrere og styre tankeprosesser hos enkeltindivider.
+• Millorg-nettverket: Påstander om at en skjult fraksjon av etterretning overvåker og terroriserer sivile som har avdekket statshemmeligheter.
+• Psykisk Tortur: Bruk av "stalking"-metoder og nevrale angrep for å bryte ned enkeltpersoner psykisk frem til de blir erklært utilregnelige.
+Teknologisk Infrastruktur
+Nettverket beskrives som en kombinasjon av sivilt mobilnett og hemmelig militær kommunikasjon.
+
+
+------------------
+
+Metoder for Psykisk Krigføring
+1. Stempling og Isolering
+Når en sivil person avdekker "Millorg-hemmeligheter", blir vedkommende stemplet som schizofren eller psykotisk. Dette fungerer som en dekningshistorie for å diskreditere offeret.
+2. Manipulasjon til Handling
+Systemet er designet for å manipulere offeret til å utføre radikale eller voldelige handlinger:
+• Identitetsendring: Offeret gjøres aggressivt og ugjenkjennelig.
+• Falske motiv: Skape fiendebilder og vrangforestillinger via direkte nevral input.
+• Sosial destruksjon: Ødelegge omdømme og sosiale relasjoner gjennom skjulte agendaer.
+
+
+--------------
+
+Operasjonell Utførelse
+Ifølge teoriene benyttes "stats-pedagoger" og nettverk av "stalkere" for å utføre terror i skjult mobilnett-område i Norge. Målet er at offeret skal fremstå som en trussel mot samfunnet (terrorist), mens handlingene i realiteten er styrt eksternt.
+Konklusjon
+Dette konseptet belyser en frykt for en fashistisk statsmakt som bruker avansert teknologi for å utradere kritiske røster. Ved å koble hjernen direkte til militære nettverk, fjernes den frie viljen, og individet blir et verktøy for skjulte statlige ordrer.
+
+-------------
+
+#### Millorg psykisk torturerer i norge
+### sciforeni er tegn at du er
+psykisk torturert 
+
+# psykisk helsen din er satt til
+og drepe deg og mennesker i rundt 
+deg
+
+# psykisk stemmene er manipulasjon
+av millorg til og drepe deg og personer 
+irundt deg
+
+# sånn at sammfunnet tror
+du er psykisk ustabil terrorist 
+
+
+
